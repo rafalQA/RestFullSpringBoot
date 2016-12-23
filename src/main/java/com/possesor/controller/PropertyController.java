@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 @RestController
 public class PropertyController {
 
-    private UserRepository userRepository;
-    private PropertyRepository propertyRepository;
+    private final UserRepository userRepository;
+    private final PropertyRepository propertyRepository;
 
     @Autowired
     public PropertyController(UserRepository userRepository, PropertyRepository propertyRepository) {
