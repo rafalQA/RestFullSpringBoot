@@ -23,11 +23,13 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="Possesor" />
+        <module name="SpringBootLearn" />
         <module name="SpringLearn" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="Possesor" target="1.8" />
+      <module name="SpringBootLearn" target="1.8" />
       <module name="SpringLearn" target="1.5" />
     </bytecodeTargetLevel>
   </component>

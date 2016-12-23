@@ -19,14 +19,11 @@ import java.util.stream.Collectors;
 @RestController
 public class PropertyController {
 
-    private final UserRepository userRepository;
-    private final PropertyRepository propertyRepository;
-
     @Autowired
-    public PropertyController(UserRepository userRepository, PropertyRepository propertyRepository) {
-        this.userRepository = userRepository;
-        this.propertyRepository = propertyRepository;
-    }
+    private UserRepository userRepository;
+    @Autowired
+    private PropertyRepository propertyRepository;
+
 
     @RequestMapping(method = RequestMethod.PUT, value = "/user/{id}/property")
     @ResponseStatus(HttpStatus.CREATED)
