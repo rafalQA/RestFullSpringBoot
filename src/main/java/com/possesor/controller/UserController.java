@@ -17,7 +17,6 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("/user")
 public class UserController {
 
     private UserRepository userRepository;
@@ -29,7 +28,8 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/user")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addUser(@RequestBody User user) {
+    public void addUser(@RequestBody String userName, @RequestBody String password) {
+        User user  = new User(userName, password);
         userRepository.save(user);
     }
 
@@ -42,10 +42,6 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET, value = "/users")
     @ResponseStatus(HttpStatus.OK)
     public List<User> getAllUser() {
-        List<User> users = new LinkedList<>();
-
-        userRepository.findAll().forEach(users::add);
-
-        return users;
+        return userRepository.findAll();
     }
 }

@@ -26,7 +26,7 @@ public class User {
     @Column(unique = true)
     private String email;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    List<Property> properties;
+    private List<Property> properties;
 
     public User(String username, String password) {
         this.username = username;
@@ -64,5 +64,21 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 }
