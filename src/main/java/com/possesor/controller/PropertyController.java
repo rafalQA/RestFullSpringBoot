@@ -4,6 +4,8 @@ import com.possesor.model.Property;
 import com.possesor.model.User;
 import com.possesor.repository.PropertyRepository;
 import com.possesor.repository.UserRepository;
+import com.possesor.service.PropertyService;
+import com.possesor.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,40 +22,31 @@ import java.util.stream.Collectors;
 public class PropertyController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userRepository;
     @Autowired
-    private PropertyRepository propertyRepository;
-
+    private PropertyService propertyService;
 
     @RequestMapping(method = RequestMethod.PUT, value = "/user/{id}/property")
     @ResponseStatus(HttpStatus.CREATED)
     public void addPropertyForUser(@PathVariable Long id, @RequestBody Property property) {
-        User user = userRepository.findOne(id);
-        user.getProperties().add(property);
-        userRepository.save(user);
+         propertyService.addPropertyForUser(id, property);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/user/{id}/property")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePropertyWhichHasUser(@PathVariable Long id) {
-       Optional<Property> property = propertyRepository.findAll().stream()
-                .filter(x -> x.getUser().getId().equals(id)).findFirst();
-
-        if(property.isPresent()){
-            propertyRepository.delete(property.get().getId());
-        }
+       propertyService.deletePropertyWithUser(id);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/user/{id}/properties")
     @ResponseStatus(HttpStatus.OK)
     public List<Property> getAllPropertiesForUser(@PathVariable Long id) {
-        return propertyRepository.findAll().stream()
-                .filter(x -> x.getUser().getId().equals(id)).collect(Collectors.toList());
+        return propertyService.getAllPropertiesForUser(id);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/properties")
     @ResponseStatus(HttpStatus.OK)
     public List<Property> getAllProperties() {
-        return propertyRepository.findAll();
+        return propertyService.getAllProperties();
     }
 }

@@ -22,7 +22,7 @@ public class User {
     private Long id;
     private UUID uuid;
     private String username;
-    private String passward;
+    private String password;
     @Column(unique = true)
     private String email;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -30,7 +30,7 @@ public class User {
 
     public User(String username, String password) {
         this.username = username;
-        this.passward = password;
+        this.password = password;
         this.uuid = UUID.randomUUID();
     }
 
@@ -50,12 +50,12 @@ public class User {
         this.username = username;
     }
 
-    public String getPassward() {
-        return passward;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPassward(String passward) {
-        this.passward = passward;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {
