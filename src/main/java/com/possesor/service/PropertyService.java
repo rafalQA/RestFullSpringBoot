@@ -56,8 +56,7 @@ public class PropertyService {
     public List<Property> getAllProperties() {
         return propertyRepository.findAll();
     }
-
-
+    
     private void validateAdd(Property property) {
         List<IllegalArgumentException> exceptions = new LinkedList<>();
 
