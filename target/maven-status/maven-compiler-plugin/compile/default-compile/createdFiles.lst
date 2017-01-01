@@ -1,7 +1,0 @@
-com\possesor\controller\PropertyController.class
-com\possesor\model\Property.class
-com\possesor\repository\UserRepository.class
-com\possesor\model\User.class
-com\possesor\AppRunner.class
-com\possesor\repository\PropertyRepository.class
-com\possesor\controller\UserController.class
