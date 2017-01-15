@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Currency {
 
-    private String base;
     private LocalDate date;
+    private String base;
     private Rates rates;
 
 

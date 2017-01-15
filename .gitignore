@@ -28,3 +28,5 @@
 # target
 
 .target
+target/classes/com/possesor/repository/UserRepository.class
+*.class
