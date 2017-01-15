@@ -2,8 +2,10 @@ package com.possesor.repository;
 
 import com.possesor.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 
@@ -13,5 +15,5 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findByUserNameAndPassword(String username, String Password);
+    User findByUsernameAndPassword(String username, String Password);
 }

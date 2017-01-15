@@ -35,46 +35,46 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    private void validateAdd(User user){
-       List<IllegalArgumentException> exceptions = new LinkedList<>();
+    private void validateAdd(User user) {
+        List<IllegalArgumentException> exceptions = new LinkedList<>();
 
-        if(user.getId() != null){
-          exceptions.add(new IllegalArgumentException("id" + Message.NOT_ALLOWED));
+        if (user.getId() != null) {
+            exceptions.add(new IllegalArgumentException("id" + Message.NOT_ALLOWED));
         }
 
-        if(user.getUsername() == null){
+        if (user.getUsername() == null) {
             exceptions.add(new IllegalArgumentException("username" + Message.MAY_NOT_BE_NULL));
         }
 
-        if(user.getUsername() != null && user.getUsername().equals("")){
+        if (user.getUsername() != null && user.getUsername().equals("")) {
             exceptions.add(new IllegalArgumentException("username" + Message.MAY_NOT_BE_EMPTY));
         }
 
-        if(user.getPassword() == null){
+        if (user.getPassword() == null) {
             exceptions.add(new IllegalArgumentException("password" + Message.MAY_NOT_BE_NULL));
         }
 
-        if(user.getPassword() != null && user.getPassword().equals("")){
+        if (user.getPassword() != null && user.getPassword().equals("")) {
             exceptions.add(new IllegalArgumentException("password" + Message.MAY_NOT_BE_EMPTY));
         }
 
-        if(user.getEmail() == null){
+        if (user.getEmail() == null) {
             exceptions.add(new IllegalArgumentException("email" + Message.MAY_NOT_BE_NULL));
         }
 
-        if(user.getEmail() != null && user.getEmail().equals("")){
+        if (user.getEmail() != null && user.getEmail().equals("")) {
             exceptions.add(new IllegalArgumentException("email" + Message.MAY_NOT_BE_EMPTY));
         }
 
-        if(!exceptions.isEmpty()){
+        if (!exceptions.isEmpty()) {
             throw new ValidationError(exceptions);
         }
     }
 
-    private void validForDataBase(User user){
-        if(userRepository.findByUserNameAndPassword(user.getUsername(), user.getPassword()) != null){
+    private void validForDataBase(User user) {
+        if (userRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword()) != null) {
             throw new IllegalArgumentException("User with username: " + user.getUsername() + " and password "
-            + user.getPassword() + " " + Message.ALREADY_EXIST);
+                    + user.getPassword() + " " + Message.ALREADY_EXIST);
         }
     }
 }

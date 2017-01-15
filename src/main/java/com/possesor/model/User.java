@@ -28,6 +28,10 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Property> properties;
 
+    protected User(){
+
+    }
+
     public User(String username, String password) {
         this.username = username;
         this.password = password;

@@ -16,6 +16,6 @@ import java.util.List;
 
 @Repository
 public interface PropertyRepository extends JpaRepository<Property, Long> {
-    Property findPropertyIgnoreCaseAndValueIgnoreCase(String name, BigDecimal value, User user);
+    Property findByNameAndValueAndUser(String name, BigDecimal value, User user);
 }
 
