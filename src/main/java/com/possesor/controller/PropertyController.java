@@ -53,6 +53,7 @@ public class PropertyController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public BigDecimal getValueByForeignCurrency(@PathVariable Long id,
                                                 @RequestParam("currency") ForeignCurrency currency) {
 
