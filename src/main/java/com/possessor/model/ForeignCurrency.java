@@ -1,4 +1,4 @@
-package com.possesor.model;
+package com.possessor.model;
 
 /**
  * Created by Rafal Piotrowicz on 15.01.2017.

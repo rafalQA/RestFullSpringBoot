@@ -1,20 +1,15 @@
-package com.possesor.controller;
+package com.possessor.controller;
 
-import com.possesor.model.ForeignCurrency;
-import com.possesor.model.Property;
-import com.possesor.model.User;
-import com.possesor.repository.PropertyRepository;
-import com.possesor.repository.UserRepository;
-import com.possesor.service.PropertyService;
-import com.possesor.service.UserService;
+import com.possessor.model.ForeignCurrency;
+import com.possessor.model.Property;
+import com.possessor.service.PropertyService;
+import com.possessor.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Created by Rafal Piotrowicz on 23.12.2016.
@@ -30,8 +25,8 @@ public class PropertyController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/user/{id}/property")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addPropertyForUser(@PathVariable Long id, @RequestBody Property property) {
-        propertyService.addPropertyForUser(id, property);
+    public Long addPropertyForUser(@PathVariable Long id, @RequestBody Property property) {
+       return propertyService.addPropertyForUser(id, property);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/user/{id}/property")

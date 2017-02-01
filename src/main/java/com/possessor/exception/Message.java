@@ -1,4 +1,4 @@
-package com.possesor.exception;
+package com.possessor.exception;
 
 /**
  * Created by Rafal Piotrowicz on 01.01.2017.
@@ -13,7 +13,7 @@ public enum Message {
 
     private String message;
 
-    private Message(String message){
+    Message(String message){
         this.message = message;
     }
 

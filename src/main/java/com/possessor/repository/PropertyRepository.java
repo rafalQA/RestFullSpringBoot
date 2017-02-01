@@ -1,14 +1,11 @@
-package com.possesor.repository;
+package com.possessor.repository;
 
-import com.possesor.model.Property;
-import com.possesor.model.User;
+import com.possessor.model.Property;
+import com.possessor.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * Created by Rafal Piotrowicz on 23.12.2016.

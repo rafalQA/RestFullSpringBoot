@@ -1,48 +1,42 @@
-package com.possesor.model;
+package com.possessor.model;
 
 /**
  * Created by Rafal Piotrowicz on 19.12.2016.
  */
-import java.util.List;
-import java.util.UUID;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+import java.util.Set;
+import java.util.UUID;
 
 @Entity
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long userId;
     private UUID uuid;
     private String username;
     private String password;
     @Column(unique = true)
     private String email;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Property> properties;
+    private Set<Property> properties;
 
-    protected User(){
-
+    protected User() {
     }
 
-    public User(String username, String password) {
+    public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
+        this.email = email;
         this.uuid = UUID.randomUUID();
     }
 
-    public List<Property> getProperties() {
+    public Set<Property> getProperties() {
         return properties;
     }
 
-    public void setProperties(List<Property> properties) {
+    public void setProperties(Set<Property> properties) {
         this.properties = properties;
     }
 
@@ -70,12 +64,12 @@ public class User {
         this.email = email;
     }
 
-    public Long getId() {
-        return id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public UUID getUuid() {

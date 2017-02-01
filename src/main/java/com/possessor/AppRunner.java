@@ -1,4 +1,4 @@
-package com.possesor;
+package com.possessor;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

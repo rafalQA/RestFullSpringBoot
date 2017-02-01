@@ -1,33 +1,35 @@
-package com.possesor.model;
+package com.possessor.model;
 
 /**
  * Created by Rafal Piotrowicz on 19.12.2016.
  */
-import java.math.BigDecimal;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 public class Property {
 
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long propertyId;
     private String name;
     private BigDecimal value;
     @ManyToOne
-    @JoinColumn(name ="id")
+    @JoinColumn(name ="userId")
     private User user;
 
-    public Long getId() {
-        return id;
+    public Property(){
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Long getPropertyId() {
+        return propertyId;
+    }
+
+    public void setPropertyId(Long propertyId) {
+        this.propertyId = propertyId;
     }
 
     public String getName() {
@@ -46,6 +48,7 @@ public class Property {
         this.value = value;
     }
 
+    @JsonIgnore
     public User getUser() {
         return user;
     }

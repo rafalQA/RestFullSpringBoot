@@ -1,13 +1,14 @@
-package com.possesor.service;
+package com.possessor.service;
 
-import com.possesor.exception.Message;
-import com.possesor.exception.ValidationError;
-import com.possesor.model.Currency;
-import com.possesor.model.ForeignCurrency;
-import com.possesor.model.Property;
-import com.possesor.model.User;
-import com.possesor.repository.PropertyRepository;
-import com.possesor.repository.UserRepository;
+import com.possessor.MathHelper;
+import com.possessor.exception.Message;
+import com.possessor.exception.ValidationError;
+import com.possessor.model.Currency;
+import com.possessor.model.ForeignCurrency;
+import com.possessor.model.Property;
+import com.possessor.model.User;
+import com.possessor.repository.PropertyRepository;
+import com.possessor.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -31,6 +32,8 @@ public class PropertyService {
     private PropertyRepository propertyRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RestTemplate restTemplate;
 
     public Long addPropertyForUser(Long userId, Property property) {
         validateAdd(property);
@@ -40,7 +43,7 @@ public class PropertyService {
         User user = userRepository.findOne(userId);
         property.setUser(user);
 
-        return propertyRepository.save(property).getId();
+        return propertyRepository.save(property).getPropertyId();
     }
 
     public BigDecimal getPropertyValueInForeignCurrency(Long id, ForeignCurrency foreignCurrency){
@@ -53,31 +56,32 @@ public class PropertyService {
 
         BigDecimal baseValue = property.getValue();
 
-        BigDecimal rate = getRate(foreignCurrency, currency);
+        Double rate = getRate(foreignCurrency, currency);
 
-        return baseValue.multiply(rate);
+        return MathHelper.getRounded(baseValue.multiply(new BigDecimal(rate)));
     }
 
     public void deletePropertyWithUser(Long id) {
         Optional<Property> property = propertyRepository.findAll().stream()
-                .filter(x -> x.getUser().getId().equals(id)).findFirst();
+                .filter(x -> x.getUser().getUserId().equals(id)).findFirst();
 
         if (property.isPresent()) {
-            propertyRepository.delete(property.get().getId());
+            propertyRepository.delete(property.get().getPropertyId());
         }
     }
 
     public List<Property> getAllPropertiesForUser(Long id) {
         return propertyRepository.findAll().stream()
-                .filter(x -> x.getUser().getId().equals(id)).collect(Collectors.toList());
+                .filter(x -> x.getUser().getUserId().equals(id)).collect(Collectors.toList());
     }
 
     public List<Property> getAllProperties() {
         return propertyRepository.findAll();
     }
 
-    private BigDecimal getRate(ForeignCurrency foreignCurrency, Currency currency) {
-        return (BigDecimal) currency.getRates().getAdditionalProperties().entrySet().stream()
+    private Double getRate(ForeignCurrency foreignCurrency, Currency currency) {
+
+        return (Double) currency.getRates().getAdditionalProperties().entrySet().stream()
                 .filter(x -> x.getKey().equals(foreignCurrency.name())).findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("in Api there is no currency: " + foreignCurrency))
                 .getValue();
@@ -85,12 +89,11 @@ public class PropertyService {
 
     private Property getPropertyByID(Long id) {
         return propertyRepository.findAll().stream()
-                .filter(x -> x.getUser().getId().equals(id)).findFirst()
+                .filter(x -> x.getPropertyId().equals(id)).findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("There is no property with Id: " + id));
     }
 
     private Currency getCurrency(UriComponents uriComponents) {
-        RestTemplate restTemplate = new RestTemplate();
         return restTemplate.getForObject(uriComponents.toUriString(), Currency.class);
     }
 
@@ -103,16 +106,16 @@ public class PropertyService {
     private void validateAdd(Property property) {
         List<IllegalArgumentException> exceptions = new LinkedList<>();
 
-        if (property.getId() != null) {
-            exceptions.add(new IllegalArgumentException("id" + Message.NOT_ALLOWED));
+        if (property.getPropertyId() != null) {
+            exceptions.add(new IllegalArgumentException("id " + Message.NOT_ALLOWED));
         }
 
         if (property.getName() == null) {
-            exceptions.add(new IllegalArgumentException("name" + Message.MAY_NOT_BE_NULL));
+            exceptions.add(new IllegalArgumentException("name " + Message.MAY_NOT_BE_NULL));
         }
 
         if (property.getName() != null && property.getName().equals("")) {
-            exceptions.add(new IllegalArgumentException("name" + Message.MAY_NOT_BE_EMPTY));
+            exceptions.add(new IllegalArgumentException("name " + Message.MAY_NOT_BE_EMPTY));
         }
 
         if (property.getUser() != null) {
@@ -120,11 +123,11 @@ public class PropertyService {
         }
 
         if (property.getValue() == null) {
-            exceptions.add(new IllegalArgumentException("value" + Message.MAY_NOT_BE_NULL));
+            exceptions.add(new IllegalArgumentException("value " + Message.MAY_NOT_BE_NULL));
         }
 
         if (property.getValue() != null && property.getValue().equals(BigDecimal.ZERO)) {
-            exceptions.add(new IllegalArgumentException("value" + Message.MAY_NOT_BE_ZERO));
+            exceptions.add(new IllegalArgumentException("value " + Message.MAY_NOT_BE_ZERO));
         }
 
         if (!exceptions.isEmpty()) {
@@ -134,9 +137,8 @@ public class PropertyService {
 
     private void validateForDataBase(Property property) {
         if (propertyRepository.findByNameAndValueAndUser(
-                property.getName(),
-                property.getValue(), property.getUser()) != null) {
-            throw new IllegalArgumentException("product" + Message.ALREADY_EXIST);
+                property.getName(), property.getValue(), property.getUser()) != null) {
+            throw new IllegalArgumentException("product " + Message.ALREADY_EXIST);
         }
     }
 

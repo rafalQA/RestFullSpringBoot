@@ -1,9 +1,10 @@
-package com.possesor.model;
+package com.possessor.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.possessor.LocalDateDeserializer;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Currency {
 
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate date;
     private String base;
     private Rates rates;
