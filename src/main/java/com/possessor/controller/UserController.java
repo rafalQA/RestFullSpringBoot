@@ -23,7 +23,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @ApiOperation(value = "addUser", nickname = "addUser")
+    @ApiOperation(value = "add user", response = Long.class)
     @RequestMapping(method = RequestMethod.PUT, value = "/users")
     @ResponseStatus(HttpStatus.CREATED)
     public Long addUser(@RequestBody DtoUser dtoUser) {
@@ -32,7 +32,7 @@ public class UserController {
         return userService.addUser(user);
     }
 
-    @ApiOperation(value = "getAllUser", nickname = "getAllUser")
+    @ApiOperation(value = "get all user", response = DtoUser.class, responseContainer ="List")
     @RequestMapping(method = RequestMethod.GET, value = "/users")
     @ResponseStatus(HttpStatus.OK)
     public List<DtoUser> getAllUser() {
@@ -41,7 +41,7 @@ public class UserController {
                 .collect(Collectors.toList());
     }
 
-    @ApiOperation(value = "deleteUser", nickname = "deleteUser")
+    @ApiOperation(value = "delete user")
     @RequestMapping(method = RequestMethod.DELETE, value = "/users/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Long id) {
