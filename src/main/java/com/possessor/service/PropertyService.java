@@ -52,15 +52,9 @@ public class PropertyService {
 
         validForeignCurrency(foreignCurrency);
 
-        UriComponents uriComponents = buildAndGetUriComponents(locale);
+        Double rate = getForeignCurrencyRate(foreignCurrency, locale);
 
-        Currency currency = getCurrency(uriComponents);
-
-        Property property = getPropertyByID(id);
-
-        BigDecimal baseValue = property.getValue();
-
-        Double rate = getRate(foreignCurrency, currency);
+        BigDecimal baseValue = getPropertyValue(id);
 
         return MathHelper.getRounded(baseValue.multiply(new BigDecimal(rate)));
     }
@@ -84,6 +78,19 @@ public class PropertyService {
         return propertyRepository.findAll();
     }
 
+    private BigDecimal getPropertyValue(Long id) {
+        Property property = getPropertyByID(id);
+
+        return property.getValue();
+    }
+
+    private Double getForeignCurrencyRate(String foreignCurrency, Locale locale) {
+        UriComponents uriComponents = buildAndGetUriComponents(locale);
+        Currency currency = getForeignCurrency(uriComponents);
+
+        return getRate(foreignCurrency, currency);
+    }
+
     private Double getRate(String foreignCurrency, Currency currency) {
 
         return (Double) currency.getRates().getAdditionalProperties().entrySet().stream()
@@ -99,7 +106,7 @@ public class PropertyService {
                 .orElseThrow(() -> new IllegalArgumentException("There is no property with Id: " + id));
     }
 
-    private Currency getCurrency(UriComponents uriComponents) {
+    private Currency getForeignCurrency(UriComponents uriComponents) {
         return restTemplate.getForObject(uriComponents.toUriString(), Currency.class);
     }
 
