@@ -30,3 +30,5 @@
 .target
 target/classes/com/possesor/repository/UserRepository.class
 *.class
+target/classes/data.sql
+target/generated-sources/annotations/com/possessor/mapper/UserMapperImpl.java

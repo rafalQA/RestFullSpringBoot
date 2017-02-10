@@ -4,6 +4,8 @@ package com.possessor.model;
  * Created by Rafal Piotrowicz on 19.12.2016.
  */
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 import java.util.UUID;
@@ -15,20 +17,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;
     private UUID uuid;
-    private String username;
-    private String password;
     @Column(unique = true)
     private String email;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.REMOVE)
     private Set<Property> properties;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "ACCOUNT_ID")
+    private Account account;
 
-    protected User() {
-    }
 
-    public User(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
+    public User() {
+        this.account = new Account();
         this.uuid = UUID.randomUUID();
     }
 
@@ -38,22 +37,6 @@ public class User {
 
     public void setProperties(Set<Property> properties) {
         this.properties = properties;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getEmail() {
@@ -78,5 +61,14 @@ public class User {
 
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
+    }
+
+    @JsonIgnore
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }

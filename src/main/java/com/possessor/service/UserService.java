@@ -1,7 +1,7 @@
 package com.possessor.service;
 
 import com.possessor.exception.Message;
-import com.possessor.exception.ValidationError;
+import com.possessor.exception.ValidationException;
 import com.possessor.model.User;
 import com.possessor.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +20,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public Long addUser(User inputUser) {
-        validateAdd(inputUser);
-        validForDataBase(inputUser);
-
-        User user =
-                new User(inputUser.getUsername(),inputUser.getPassword(), inputUser.getEmail());
+    public Long addUser(User user) {
+        validateAdd(user);
+        validForDataBase(user);
 
         return userRepository.save(user).getUserId();
     }
@@ -45,19 +42,19 @@ public class UserService {
             exceptions.add(new IllegalArgumentException("id" + Message.NOT_ALLOWED));
         }
 
-        if (user.getUsername() == null) {
+        if (user.getAccount().getName() == null) {
             exceptions.add(new IllegalArgumentException("username " + Message.MAY_NOT_BE_NULL));
         }
 
-        if (user.getUsername() != null && user.getUsername().equals("")) {
+        if (user.getAccount().getName() != null && user.getAccount().getName().equals("")) {
             exceptions.add(new IllegalArgumentException("username " + Message.MAY_NOT_BE_EMPTY));
         }
 
-        if (user.getPassword() == null) {
+        if (user.getAccount().getPassword() == null) {
             exceptions.add(new IllegalArgumentException("password " + Message.MAY_NOT_BE_NULL));
         }
 
-        if (user.getPassword() != null && user.getPassword().equals("")) {
+        if (user.getAccount().getPassword() != null && user.getAccount().getPassword().equals("")) {
             exceptions.add(new IllegalArgumentException("password " + Message.MAY_NOT_BE_EMPTY));
         }
 
@@ -70,14 +67,15 @@ public class UserService {
         }
 
         if (!exceptions.isEmpty()) {
-            throw new ValidationError(exceptions);
+            throw new ValidationException(exceptions);
         }
     }
 
     private void validForDataBase(User user) {
-        if (userRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword()) != null) {
-            throw new IllegalArgumentException("User with username: " + user.getUsername() + " and password "
-                    + user.getPassword() + " " + Message.ALREADY_EXIST);
+        if (userRepository.findByAccountNameAndAccountPassword(user.getAccount().getName(),
+                user.getAccount().getPassword()) != null) {
+            throw new IllegalArgumentException("User with username: " + user.getAccount().getName() + " and password "
+                    + user.getAccount().getPassword() + " " + Message.ALREADY_EXIST);
         }
     }
 }

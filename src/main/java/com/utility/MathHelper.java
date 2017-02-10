@@ -1,4 +1,4 @@
-package com.possessor;
+package com.utility;
 
 import java.math.BigDecimal;
 

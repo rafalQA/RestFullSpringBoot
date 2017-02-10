@@ -1,24 +1,24 @@
 package com.possessor.service;
 
-import com.possessor.MathHelper;
 import com.possessor.exception.Message;
-import com.possessor.exception.ValidationError;
+import com.possessor.exception.ValidationException;
 import com.possessor.model.Currency;
 import com.possessor.model.ForeignCurrency;
 import com.possessor.model.Property;
 import com.possessor.model.User;
 import com.possessor.repository.PropertyRepository;
 import com.possessor.repository.UserRepository;
+import com.utility.LocaleCurrency;
+import com.utility.MathHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -34,6 +34,8 @@ public class PropertyService {
     private UserRepository userRepository;
     @Autowired
     private RestTemplate restTemplate;
+    @Autowired
+    private LocaleCurrency localeCurrency;
 
     public Long addPropertyForUser(Long userId, Property property) {
         validateAdd(property);
@@ -46,9 +48,11 @@ public class PropertyService {
         return propertyRepository.save(property).getPropertyId();
     }
 
-    public BigDecimal getPropertyValueInForeignCurrency(Long id, ForeignCurrency foreignCurrency){
+    public BigDecimal getPropertyValueInForeignCurrency(Long id, String foreignCurrency, Locale locale) {
 
-        UriComponents uriComponents = buildAndGetUriComponents(foreignCurrency);
+        validForeignCurrency(foreignCurrency);
+
+        UriComponents uriComponents = buildAndGetUriComponents(locale);
 
         Currency currency = getCurrency(uriComponents);
 
@@ -62,12 +66,13 @@ public class PropertyService {
     }
 
     public void deletePropertyWithUser(Long id) {
-        Optional<Property> property = propertyRepository.findAll().stream()
-                .filter(x -> x.getUser().getUserId().equals(id)).findFirst();
+        Property property = propertyRepository.findAll().stream()
+                .filter(x -> x.getUser().getUserId().equals(id)).findFirst()
+                .orElseThrow(() -> new NoSuchElementException(String.format("No suchProperty with %d", id)));
 
-        if (property.isPresent()) {
-            propertyRepository.delete(property.get().getPropertyId());
-        }
+        propertyRepository.delete(property.getPropertyId());
+        Assert.isTrue(!propertyRepository.exists(property.getPropertyId()),
+                String.format("Property %s It was not deleted", property.getPropertyId()));
     }
 
     public List<Property> getAllPropertiesForUser(Long id) {
@@ -79,11 +84,12 @@ public class PropertyService {
         return propertyRepository.findAll();
     }
 
-    private Double getRate(ForeignCurrency foreignCurrency, Currency currency) {
+    private Double getRate(String foreignCurrency, Currency currency) {
 
         return (Double) currency.getRates().getAdditionalProperties().entrySet().stream()
-                .filter(x -> x.getKey().equals(foreignCurrency.name())).findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("in Api there is no currency: " + foreignCurrency))
+                .filter(x -> x.getKey().equals(foreignCurrency)).findFirst()
+                .orElseThrow(() ->
+                        new IllegalArgumentException(String.format("In Api there is no currency: %s", foreignCurrency)))
                 .getValue();
     }
 
@@ -97,10 +103,10 @@ public class PropertyService {
         return restTemplate.getForObject(uriComponents.toUriString(), Currency.class);
     }
 
-    private UriComponents buildAndGetUriComponents(ForeignCurrency foreignCurrency) {
+    private UriComponents buildAndGetUriComponents(Locale locale) {
         return UriComponentsBuilder.newInstance().
                 scheme("http").host("api.fixer.io").path("latest")
-                .queryParam("base", ForeignCurrency.PLN.name()).build();
+                .queryParam("base", localeCurrency.getLocaleCurrencyCode(locale)).build();
     }
 
     private void validateAdd(Property property) {
@@ -131,7 +137,7 @@ public class PropertyService {
         }
 
         if (!exceptions.isEmpty()) {
-            throw new ValidationError(exceptions);
+            throw new ValidationException(exceptions);
         }
     }
 
@@ -145,6 +151,16 @@ public class PropertyService {
     private void userValidate(Long id) {
         if (userRepository.findOne(id) == null) {
             throw new IllegalArgumentException("user with id :" + id + "" + Message.NOT_FOUND);
+        }
+    }
+
+    private void validForeignCurrency(String foreignCurrency) {
+        boolean is = Arrays.stream(ForeignCurrency.values())
+                .anyMatch(f -> f.name().equals(foreignCurrency));
+
+        if (!is) {
+            throw new IllegalArgumentException("allowed currency code is: " + Arrays.stream(ForeignCurrency.values())
+                    .map(ForeignCurrency::name).collect(Collectors.joining("; ")));
         }
     }
 }

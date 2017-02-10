@@ -9,5 +9,5 @@ public enum ForeignCurrency {
     IDR, ILS, INR, JPY, KRW, MXN,
     MYR, NOK, NZD, PHP, PLN, RON,
     RUB, SEK, SGD, THB, TRY, USD,
-    ZAR,
+    ZAR;
 }

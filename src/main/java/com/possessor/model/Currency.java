@@ -2,7 +2,7 @@ package com.possessor.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.possessor.LocalDateDeserializer;
+import com.utility.LocalDateDeserializer;
 
 import java.time.LocalDate;
 import java.util.stream.Collectors;

@@ -6,11 +6,11 @@ import java.util.stream.Collectors;
 /**
  * Created by Rafal Piotrowicz on 01.01.2017.
  */
-public class ValidationError extends RuntimeException {
+public class ValidationException extends RuntimeException {
 
     private List<IllegalArgumentException> illegalArgumentExceptions;
 
-    public ValidationError(List<IllegalArgumentException> illegalArgumentExceptions) {
+    public ValidationException(List<IllegalArgumentException> illegalArgumentExceptions) {
         super("Validation Errors: " + illegalArgumentExceptions.stream().map(IllegalArgumentException::getMessage)
                 .collect(Collectors.joining(";")));
 

@@ -1,4 +1,4 @@
-package com.possessor;
+package com.utility;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
