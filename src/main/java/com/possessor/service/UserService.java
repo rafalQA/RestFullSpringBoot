@@ -42,11 +42,11 @@ public class UserService {
             exceptions.add(new IllegalArgumentException("id" + Message.NOT_ALLOWED));
         }
 
-        if (user.getAccount().getName() == null) {
+        if (user.getAccount().getUsername() == null) {
             exceptions.add(new IllegalArgumentException("username " + Message.MAY_NOT_BE_NULL));
         }
 
-        if (user.getAccount().getName() != null && user.getAccount().getName().equals("")) {
+        if (user.getAccount().getUsername() != null && user.getAccount().getUsername().equals("")) {
             exceptions.add(new IllegalArgumentException("username " + Message.MAY_NOT_BE_EMPTY));
         }
 
@@ -72,9 +72,9 @@ public class UserService {
     }
 
     private void validForDataBase(User user) {
-        if (userRepository.findByAccountNameAndAccountPassword(user.getAccount().getName(),
+        if (userRepository.findByAccountUsernameAndAccountPassword(user.getAccount().getUsername(),
                 user.getAccount().getPassword()) != null) {
-            throw new IllegalArgumentException("User with username: " + user.getAccount().getName() + " and password "
+            throw new IllegalArgumentException("User with username: " + user.getAccount().getUsername() + " and password "
                     + user.getAccount().getPassword() + " " + Message.ALREADY_EXIST);
         }
     }

@@ -61,10 +61,11 @@ public class PropertyService {
 
     public void deletePropertyOwnedByUser(Long id) {
         Property property = propertyRepository.findAll().stream()
-                .filter(x -> x.getUser().getUserId().equals(id)).findFirst()
+                .filter(x -> x.getPropertyId().equals(id)).findFirst()
                 .orElseThrow(() -> new NoSuchElementException(String.format("No suchProperty with %d", id)));
 
         propertyRepository.delete(property.getPropertyId());
+
         Assert.isTrue(!propertyRepository.exists(property.getPropertyId()),
                 String.format("Property %s It was not deleted", property.getPropertyId()));
     }

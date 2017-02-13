@@ -28,7 +28,6 @@ public class PropertyController {
     @RequestMapping(method = RequestMethod.PUT, value = "/user/{id}/properties")
     @ResponseStatus(HttpStatus.CREATED)
     public Long addPropertyForUser(@PathVariable Long id, @RequestBody Property property) {
-
         return propertyService.addPropertyForUser(id, property);
     }
 

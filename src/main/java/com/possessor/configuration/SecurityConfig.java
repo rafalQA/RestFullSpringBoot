@@ -1,6 +1,7 @@
 package com.possessor.configuration;
 
 import com.possessor.model.Roles;
+import com.possessor.model.User;
 import com.possessor.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -9,12 +10,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-import java.util.stream.Collectors;
 
 /**
  * Created by rpiotrowicz on 2017-02-09.
@@ -25,12 +22,10 @@ public class SecurityConfig {
     @Autowired
     private UserRepository userRepository;
 
-    private UserDetailsService userDetailsService = username -> userRepository.findByAccountName(username)
-            .map(user -> new User(user.getAccount().getName(), user.getAccount().getPassword(),
-                    user.getAccount().getEnable(), true, true, true,
-                    user.getAccount().getRoles().stream()
-                            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name())).collect(Collectors.toList()))
-            ).orElseThrow(() -> new UsernameNotFoundException(String.format("No such user %s", username)));
+    private UserDetailsService userDetailsService = username ->
+            userRepository.findByAccountUsername(username).map(User::getAccount)
+                    .orElseThrow(() ->
+                            new UsernameNotFoundException(String.format("No such account for user %s", username)));
 
     @Bean
     GlobalAuthenticationConfigurerAdapter authenticationAdapter() {
