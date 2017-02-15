@@ -4,6 +4,7 @@ import com.possessor.exception.Message;
 import com.possessor.exception.ValidationException;
 import com.possessor.model.User;
 import com.possessor.repository.UserRepository;
+import com.possessor.CredentialsMailSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,12 +20,20 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private CredentialsMailSender mailSender;
 
     public Long addUser(User user) {
         validateAdd(user);
         validForDataBase(user);
 
-        return userRepository.save(user).getUserId();
+        Long userId = userRepository.save(user).getUserId();
+
+        if (userId > 0) {
+          mailSender.sendCredentials(user);
+        }
+
+        return userId;
     }
 
     public void deleteUser(Long id) {

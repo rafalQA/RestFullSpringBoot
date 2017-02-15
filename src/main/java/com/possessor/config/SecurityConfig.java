@@ -1,4 +1,4 @@
-package com.possessor.configuration;
+package com.possessor.config;
 
 import com.possessor.model.Roles;
 import com.possessor.model.User;

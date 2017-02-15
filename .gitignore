@@ -32,3 +32,5 @@ target/classes/com/possesor/repository/UserRepository.class
 *.class
 target/classes/data.sql
 target/generated-sources/annotations/com/possessor/mapper/UserMapperImpl.java
+target/classes/config/application.properties
+target/classes/templates/credentialMail.ftl
