@@ -1,11 +1,9 @@
 package com.possessor.model;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Base64;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,8 +33,6 @@ public class Account implements UserDetails {
 
 
     public Account() {
-        this.password = Base64.getEncoder()
-                .encodeToString(RandomStringUtils.randomAlphanumeric(20).getBytes());
         this.roles = new HashSet<>();
         this.roles.add(Roles.USER);
         this.accountNonExpired = true;

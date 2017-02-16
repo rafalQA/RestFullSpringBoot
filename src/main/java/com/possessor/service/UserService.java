@@ -6,6 +6,7 @@ import com.possessor.model.User;
 import com.possessor.repository.UserRepository;
 import com.possessor.CredentialsMailSender;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -22,15 +23,23 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private CredentialsMailSender mailSender;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public Long addUser(User user) {
         validateAdd(user);
         validForDataBase(user);
 
+        String unencrypted = user.getAccount().getPassword();
+
+        user.getAccount().setPassword(
+                passwordEncoder.encode(unencrypted));
+
         Long userId = userRepository.save(user).getUserId();
 
         if (userId > 0) {
-          mailSender.sendCredentials(user);
+            user.getAccount().setPassword(unencrypted);
+            mailSender.sendCredentials(user);
         }
 
         return userId;

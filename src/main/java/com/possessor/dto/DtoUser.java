@@ -12,6 +12,7 @@ public class DtoUser {
     private Long userId;
     private String username;
     private String email;
+    private String password;
     private Set<Property> properties;
 
     public Long getUserId() {
@@ -44,5 +45,13 @@ public class DtoUser {
 
     public void setProperties(Set<Property> properties) {
         this.properties = properties;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

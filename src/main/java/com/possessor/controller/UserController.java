@@ -22,12 +22,14 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserMapper userMapper;
 
     @ApiOperation(value = "add user", response = Long.class)
     @RequestMapping(method = RequestMethod.PUT, value = "/users")
     @ResponseStatus(HttpStatus.CREATED)
     public Long addUser(@RequestBody DtoUser dtoUser) {
-        User user = UserMapper.INSTANCE.userDtoToUser(dtoUser);
+        User user = userMapper.userDtoToUser(dtoUser);
 
         return userService.addUser(user);
     }
@@ -37,7 +39,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public List<DtoUser> getAllUser() {
         return userService.getAllUser().stream()
-                .map(UserMapper.INSTANCE::userToDtoUser)
+                .map(user -> userMapper.userToDtoUser(user))
                 .collect(Collectors.toList());
     }
 
