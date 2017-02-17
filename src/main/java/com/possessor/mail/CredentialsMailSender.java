@@ -1,4 +1,4 @@
-package com.possessor;
+package com.possessor.mail;
 
 import com.possessor.model.User;
 import com.utility.FreeMarkerHelper;

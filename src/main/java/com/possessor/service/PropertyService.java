@@ -1,9 +1,7 @@
 package com.possessor.service;
 
-import com.possessor.exception.Message;
-import com.possessor.exception.ValidationException;
+import com.possessor.exception.PropertyValidator;
 import com.possessor.model.Currency;
-import com.possessor.model.ForeignCurrency;
 import com.possessor.model.Property;
 import com.possessor.model.User;
 import com.possessor.repository.PropertyRepository;
@@ -18,7 +16,9 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 /**
@@ -36,11 +36,13 @@ public class PropertyService {
     private RestTemplate restTemplate;
     @Autowired
     private LocaleCurrency localeCurrency;
+    @Autowired
+    private PropertyValidator propertyValidator;
 
     public Long addPropertyForUser(Long userId, Property property) {
-        validateAdd(property);
-        userValidate(userId);
-        validateForDataBase(property);
+        propertyValidator.validateAdd(property);
+        propertyValidator.userValidate(userId);
+        propertyValidator.validateForDataBase(property);
 
         User user = userRepository.findOne(userId);
         property.setUser(user);
@@ -50,7 +52,7 @@ public class PropertyService {
 
     public BigDecimal getPropertyValueInForeignCurrency(Long id, String foreignCurrency, Locale locale) {
 
-        validForeignCurrency(foreignCurrency);
+        propertyValidator.validForeignCurrency(foreignCurrency);
 
         Double rate = getForeignCurrencyRate(foreignCurrency, locale);
 
@@ -115,60 +117,5 @@ public class PropertyService {
         return UriComponentsBuilder.newInstance().
                 scheme("http").host("api.fixer.io").path("latest")
                 .queryParam("base", localeCurrency.getLocaleCurrencyCode(locale)).build();
-    }
-
-    private void validateAdd(Property property) {
-        List<IllegalArgumentException> exceptions = new LinkedList<>();
-
-        if (property.getPropertyId() != null) {
-            exceptions.add(new IllegalArgumentException("id " + Message.NOT_ALLOWED));
-        }
-
-        if (property.getName() == null) {
-            exceptions.add(new IllegalArgumentException("name " + Message.MAY_NOT_BE_NULL));
-        }
-
-        if (property.getName() != null && property.getName().equals("")) {
-            exceptions.add(new IllegalArgumentException("name " + Message.MAY_NOT_BE_EMPTY));
-        }
-
-        if (property.getUser() != null) {
-            exceptions.add(new IllegalArgumentException("user" + Message.NOT_ALLOWED));
-        }
-
-        if (property.getValue() == null) {
-            exceptions.add(new IllegalArgumentException("value " + Message.MAY_NOT_BE_NULL));
-        }
-
-        if (property.getValue() != null && property.getValue().equals(BigDecimal.ZERO)) {
-            exceptions.add(new IllegalArgumentException("value " + Message.MAY_NOT_BE_ZERO));
-        }
-
-        if (!exceptions.isEmpty()) {
-            throw new ValidationException(exceptions);
-        }
-    }
-
-    private void validateForDataBase(Property property) {
-        if (propertyRepository.findByNameAndValueAndUser(
-                property.getName(), property.getValue(), property.getUser()) != null) {
-            throw new IllegalArgumentException("product " + Message.ALREADY_EXIST);
-        }
-    }
-
-    private void userValidate(Long id) {
-        if (userRepository.findOne(id) == null) {
-            throw new IllegalArgumentException("user with id :" + id + "" + Message.NOT_FOUND);
-        }
-    }
-
-    private void validForeignCurrency(String foreignCurrency) {
-        boolean is = Arrays.stream(ForeignCurrency.values())
-                .anyMatch(f -> f.name().equals(foreignCurrency));
-
-        if (!is) {
-            throw new IllegalArgumentException("allowed currency code is: " + Arrays.stream(ForeignCurrency.values())
-                    .map(ForeignCurrency::name).collect(Collectors.joining("; ")));
-        }
     }
 }

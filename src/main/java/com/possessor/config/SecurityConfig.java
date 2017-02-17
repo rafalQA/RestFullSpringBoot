@@ -32,7 +32,7 @@ public class SecurityConfig {
                             new UsernameNotFoundException(String.format("No such account for user %s", username)));
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
