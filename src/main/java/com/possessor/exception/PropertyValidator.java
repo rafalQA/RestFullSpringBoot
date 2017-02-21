@@ -5,6 +5,7 @@ import com.possessor.model.Property;
 import com.possessor.repository.PropertyRepository;
 import com.possessor.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 /**
  * Created by rpiotrowicz on 2017-02-17.
  */
+@Component
 public class PropertyValidator {
 
     @Autowired
