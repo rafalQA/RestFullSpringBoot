@@ -18,6 +18,10 @@
         <java.version>1.8</java.version>
         <swagger.version>2.4.0</swagger.version>
         <mapstruct.version>1.1.0.Final</mapstruct.version>
+        <jquery.version>2.2.4</jquery.version>
+        <angularjs.version>1.4.9</angularjs.version>
+        <bootstrap.version>3.3.7-1</bootstrap.version>
+        <jasmine.version>2.0.0</jasmine.version>
     </properties>
 
     <dependencies>
@@ -84,8 +88,19 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.36</version>
         </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>angularjs</artifactId>
+            <version>${angularjs.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jasmine</artifactId>
+            <version>${jasmine.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-
 
     <build>
         <plugins>
@@ -109,6 +124,44 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+            <plugin>
+            <groupId>ro.isdc.wro4j</groupId>
+            <artifactId>wro4j-maven-plugin</artifactId>
+            <version>1.8.0</version>
+            <executions>
+                <execution>
+                    <phase>generate-resources</phase>
+                    <goals>
+                        <goal>run</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory</wroManagerFactory>
+                <cssDestinationFolder>${project.build.directory}/generated-resources/static/css</cssDestinationFolder>
+                <jsDestinationFolder>${project.build.directory}/generated-resources/static/js</jsDestinationFolder>
+                <wroFile>${project.build.directory}/wro/wro.xml</wroFile>
+                <extraConfigFile>${project.build.directory}/wro/wro.properties</extraConfigFile>
+                <contextFolder>${project.build.directory}/wro</contextFolder>
+            </configuration>
+            <dependencies>
+                <dependency>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>jquery</artifactId>
+                    <version>${jquery.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>angularjs</artifactId>
+                    <version>${angularjs.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>bootstrap</artifactId>
+                    <version>${bootstrap.version}</version>
+                </dependency>
+            </dependencies>
+        </plugin>
         </plugins>
     </build>
 

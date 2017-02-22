@@ -39,3 +39,8 @@ target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
 target/classes/static/admin.js
 target/classes/static/index.css
 target/classes/static/index.html
+target/classes/public/js/hello.js
+target/classes/static/admin.html
+target/classes/static/home.html
+target/classes/static/login.html
+target/classes/static/css/admin.css
