@@ -26,7 +26,7 @@ public class UserController {
     private UserMapper userMapper;
 
     @ApiOperation(value = "add user", response = Long.class)
-    @RequestMapping(method = RequestMethod.PUT, value = "/users")
+    @RequestMapping(method = RequestMethod.POST, value = "/users")
     @ResponseStatus(HttpStatus.CREATED)
     public Long addUser(@RequestBody DtoUser dtoUser) {
         User user = userMapper.userDtoToUser(dtoUser);

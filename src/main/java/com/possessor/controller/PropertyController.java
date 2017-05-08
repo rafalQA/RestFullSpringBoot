@@ -25,7 +25,7 @@ public class PropertyController {
     private PropertyService propertyService;
 
     @ApiOperation(value = "add property for user")
-    @RequestMapping(method = RequestMethod.PUT, value = "/user/{id}/properties")
+    @RequestMapping(method = RequestMethod.POST, value = "/user/{id}/properties")
     @ResponseStatus(HttpStatus.CREATED)
     public Long addPropertyForUser(@PathVariable Long id, @RequestBody Property property) {
         return propertyService.addPropertyForUser(id, property);
