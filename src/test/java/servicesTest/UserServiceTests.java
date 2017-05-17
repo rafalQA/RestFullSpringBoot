@@ -1,3 +1,5 @@
+package servicesTest;
+
 import com.possessor.model.Account;
 import com.possessor.model.User;
 import com.possessor.repository.UserRepository;
@@ -23,7 +25,7 @@ import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class UserServiceTest {
+public class UserServiceTests {
 
     @Mock
     private UserRepository userRepository;

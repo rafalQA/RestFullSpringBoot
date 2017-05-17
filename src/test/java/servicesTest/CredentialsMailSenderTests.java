@@ -1,3 +1,5 @@
+package servicesTest;
+
 import com.possessor.mail.CredentialsMailSender;
 import com.possessor.model.Account;
 import com.possessor.model.User;
@@ -22,7 +24,7 @@ import java.io.IOException;
  */
 
 @RunWith(MockitoJUnitRunner.class)
-public class CredentialsMailSenderTest {
+public class CredentialsMailSenderTests {
 
     @Spy
     private JavaMailSenderImpl javaMailSender;
