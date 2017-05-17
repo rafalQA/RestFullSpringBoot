@@ -65,7 +65,7 @@ public class SecurityConfig {
                         .csrf().disable()
                         .authorizeRequests()
                         .antMatchers(HttpMethod.PUT, "/users").permitAll()
-                        .antMatchers("/user/{id}/properties", "properties/{id}").hasRole(Roles.USER.name())
+                        .antMatchers("/users/{id}/properties", "properties/{id}").hasRole(Roles.USER.name())
                         .antMatchers(HttpMethod.GET, "/users").hasRole(Roles.ADMIN.name())
                         .antMatchers("/users/{id}", "/properties").hasRole(Roles.ADMIN.name());
             }

@@ -5,6 +5,7 @@ package com.possessor.model;
  */
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -18,6 +19,7 @@ public class User {
     private Long userId;
     private UUID uuid;
     @Column(unique = true)
+    @Email
     private String email;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.REMOVE)
     private Set<Property> properties;

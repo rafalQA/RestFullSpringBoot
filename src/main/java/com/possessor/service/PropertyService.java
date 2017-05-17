@@ -1,6 +1,5 @@
 package com.possessor.service;
 
-import com.possessor.exception.PropertyValidator;
 import com.possessor.model.Currency;
 import com.possessor.model.Property;
 import com.possessor.model.User;
@@ -36,15 +35,11 @@ public class PropertyService {
     private RestTemplate restTemplate;
     @Autowired
     private LocaleCurrency localeCurrency;
-    @Autowired
-    private PropertyValidator propertyValidator;
 
     public Long addPropertyForUser(Long userId, Property property) {
-        propertyValidator.validateAdd(property);
-        propertyValidator.userValidate(userId);
-        propertyValidator.validateForDataBase(property);
 
         User user = userRepository.findOne(userId);
+
         property.setUser(user);
 
         return propertyRepository.save(property).getPropertyId();
@@ -52,7 +47,7 @@ public class PropertyService {
 
     public BigDecimal getPropertyValueInForeignCurrency(Long id, String foreignCurrency, Locale locale) {
 
-        propertyValidator.validForeignCurrency(foreignCurrency);
+       // propertyValidator.validForeignCurrency(foreignCurrency);
 
         Double rate = getForeignCurrencyRate(foreignCurrency, locale);
 

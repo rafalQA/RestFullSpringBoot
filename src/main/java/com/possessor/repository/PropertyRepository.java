@@ -13,6 +13,6 @@ import java.math.BigDecimal;
 
 @Repository
 public interface PropertyRepository extends JpaRepository<Property, Long> {
-    Property findByNameAndValueAndUser(String name, BigDecimal value, User user);
+    boolean existsByNameAndValueAndUser(String name, BigDecimal value, User user);
 }
 

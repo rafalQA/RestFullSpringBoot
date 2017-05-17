@@ -35,12 +35,13 @@ public class MailConfig {
 
         JavaMailSenderImpl sender = new JavaMailSenderImpl();
         sender.setProtocol(protocol);
-        sender.setHost(host);
-        sender.setPort(port);
+        sender.setHost("localhost");
+        sender.setPort(50);
+        sender.setHost("localhost");
         sender.setUsername(username);
         sender.setPassword(password);
 
-        Map mailProperties =  mailProperties().getJavaMailProp();
+        Map mailProperties = mailProperties().getJavaMailProp();
 
         sender.getJavaMailProperties().putAll(mailProperties);
 

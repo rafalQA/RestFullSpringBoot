@@ -4,7 +4,7 @@ import com.possessor.model.User;
 import com.utility.FreeMarkerHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
@@ -12,7 +12,7 @@ import javax.mail.internet.InternetAddress;
 /**
  * Created by rpiotrowicz on 2017-02-13.
  */
-@Component
+@Service
 public class CredentialsMailSender {
 
     @Autowired

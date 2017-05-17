@@ -89,15 +89,9 @@
             <version>5.1.36</version>
         </dependency>
         <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>angularjs</artifactId>
-            <version>${angularjs.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>jasmine</artifactId>
-            <version>${jasmine.version}</version>
+            <groupId>org.subethamail</groupId>
+            <artifactId>subethasmtp</artifactId>
+            <version>3.1.7</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -124,44 +118,6 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-            <plugin>
-            <groupId>ro.isdc.wro4j</groupId>
-            <artifactId>wro4j-maven-plugin</artifactId>
-            <version>1.8.0</version>
-            <executions>
-                <execution>
-                    <phase>generate-resources</phase>
-                    <goals>
-                        <goal>run</goal>
-                    </goals>
-                </execution>
-            </executions>
-            <configuration>
-                <wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory</wroManagerFactory>
-                <cssDestinationFolder>${project.build.directory}/generated-resources/static/css</cssDestinationFolder>
-                <jsDestinationFolder>${project.build.directory}/generated-resources/static/js</jsDestinationFolder>
-                <wroFile>${project.build.directory}/wro/wro.xml</wroFile>
-                <extraConfigFile>${project.build.directory}/wro/wro.properties</extraConfigFile>
-                <contextFolder>${project.build.directory}/wro</contextFolder>
-            </configuration>
-            <dependencies>
-                <dependency>
-                    <groupId>org.webjars</groupId>
-                    <artifactId>jquery</artifactId>
-                    <version>${jquery.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.webjars</groupId>
-                    <artifactId>angularjs</artifactId>
-                    <version>${angularjs.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.webjars</groupId>
-                    <artifactId>bootstrap</artifactId>
-                    <version>${bootstrap.version}</version>
-                </dependency>
-            </dependencies>
-        </plugin>
         </plugins>
     </build>
 

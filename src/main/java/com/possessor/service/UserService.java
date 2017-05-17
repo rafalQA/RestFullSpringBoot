@@ -1,7 +1,5 @@
 package com.possessor.service;
 
-import com.possessor.exception.UserValidator;
-import com.possessor.mail.CredentialsMailSender;
 import com.possessor.model.User;
 import com.possessor.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,24 +17,15 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private CredentialsMailSender mailSender;
-    @Autowired
     private PasswordEncoder passwordEncoder;
-    @Autowired
-    private UserValidator userValidator;
 
     public Long addUser(User user) {
-        validUser(user);
 
         String unencrypted = user.getAccount().getPassword();
 
         encodeUserAccountPassword(user, unencrypted);
 
-        Long userId = userRepository.save(user).getUserId();
-
-        sendMailToUserWithDecodeUnencrypted(user, unencrypted, userId);
-
-        return userId;
+        return userRepository.save(user).getUserId();
     }
 
     public void deleteUser(Long id) {
@@ -47,20 +36,11 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public boolean userExist(long id) {
+        return userRepository.exists(id);
+    }
+
     private void encodeUserAccountPassword(User user, String unencrypted) {
-        user.getAccount().setPassword(
-                passwordEncoder.encode(unencrypted));
-    }
-
-    private void sendMailToUserWithDecodeUnencrypted(User user, String unencrypted, Long userId) {
-        if (userId > 0) {
-            user.getAccount().setPassword(unencrypted);
-            mailSender.sendCredentials(user);
-        }
-    }
-
-    private void validUser(User user) {
-        userValidator.validateAdd(user);
-        userValidator.validForDataBase(user);
+        user.getAccount().setPassword(passwordEncoder.encode(unencrypted));
     }
 }

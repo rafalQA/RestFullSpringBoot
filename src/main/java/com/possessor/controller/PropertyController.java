@@ -3,11 +3,14 @@ package com.possessor.controller;
 import com.possessor.model.Property;
 import com.possessor.service.PropertyService;
 import com.possessor.service.UserService;
+import com.possessor.validator.PropertyValidator;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
@@ -20,14 +23,25 @@ import java.util.Locale;
 public class PropertyController {
 
     @Autowired
-    private UserService userRepository;
+    private UserService userService;
     @Autowired
     private PropertyService propertyService;
+    @Autowired
+    private PropertyValidator propertyValidator;
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder){
+        binder.setValidator(propertyValidator);
+    }
 
     @ApiOperation(value = "add property for user")
-    @RequestMapping(method = RequestMethod.POST, value = "/user/{id}/properties")
+    @RequestMapping(method = RequestMethod.POST, value = "/users/{id}/properties")
     @ResponseStatus(HttpStatus.CREATED)
-    public Long addPropertyForUser(@PathVariable Long id, @RequestBody Property property) {
+    public Long addPropertyForUser(@PathVariable Long id, @Valid @RequestBody Property property) {
+        if(!userService.userExist(id)){
+            throw new IllegalArgumentException("User with id " + id + " doesn't exist");
+        }
+
         return propertyService.addPropertyForUser(id, property);
     }
 
@@ -40,7 +54,7 @@ public class PropertyController {
 
     @ApiOperation(value = "get all properties for user", nickname = "get all properties for user",
             response = Property.class, responseContainer = "List")
-    @RequestMapping(method = RequestMethod.GET, value = "/user/{id}/properties")
+    @RequestMapping(method = RequestMethod.GET, value = "/users/{id}/properties")
     @ResponseStatus(HttpStatus.OK)
     public List<Property> getAllPropertiesForUser(@PathVariable Long id) {
         return propertyService.getAllPropertiesForUser(id);
