@@ -1,7 +1,7 @@
 package com.possessor.controller;
 
 import com.possessor.dto.DtoUser;
-import com.possessor.mail.CredentialsMailSender;
+import com.possessor.service.CredentialsMailSender;
 import com.possessor.mapper.UserMapper;
 import com.possessor.model.User;
 import com.possessor.service.UserService;
@@ -46,7 +46,7 @@ public class UserController {
         long userId = userService.addUser(user);
 
         if (userId > 0) {
-            mailSender.sendCredentials(user);
+            mailSender.sendCredentials(dtoUser);
         }
 
         return userId;

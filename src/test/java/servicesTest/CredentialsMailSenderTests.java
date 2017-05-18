@@ -1,8 +1,7 @@
 package servicesTest;
 
-import com.possessor.mail.CredentialsMailSender;
-import com.possessor.model.Account;
-import com.possessor.model.User;
+import com.possessor.dto.DtoUser;
+import com.possessor.service.CredentialsMailSender;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -32,7 +31,7 @@ public class CredentialsMailSenderTests {
     @InjectMocks
     private CredentialsMailSender credentialsMailSender = new CredentialsMailSender();
 
-    private User user;
+    private DtoUser user;
     private Wiser wiser;
 
     @Before
@@ -43,12 +42,10 @@ public class CredentialsMailSenderTests {
         wiser.setPort(50);
         wiser.start();
 
-        user = new User();
+        user = new DtoUser();
         user.setEmail("m.agent.rafal@gmail.com");
-        Account account = new Account();
-        account.setUsername("Rafal");
-        account.setPassword("Pogoda");
-        user.setAccount(account);
+        user.setUsername("Rafal");
+        user.setPassword("Pogoda");
     }
 
     @Test
@@ -68,17 +65,14 @@ public class CredentialsMailSenderTests {
         Assert.assertTrue("Fake smtp server didn't received message", receivedMessage != null);
 
         Assert.assertTrue("Mail content doesn't contain user password",
-                actualSendMailContent.contains(user.getAccount().getPassword()));
+                actualSendMailContent.contains("Pogoda"));
 
         Assert.assertTrue("Mail content doesn't contain user name",
-                actualSendMailContent.contains(user.getAccount().getUsername()));
-
-        Assert.assertTrue("Mail content doesn't contain user name",
-                actualSendMailContent.contains(user.getAccount().getUsername()));
+                actualSendMailContent.contains("Rafal"));
 
         try {
             Assert.assertEquals("Mail doesn't send to correct recipient",
-                    receivedMessage.getRecipients(Message.RecipientType.TO)[0].toString(), user.getEmail());
+                    receivedMessage.getRecipients(Message.RecipientType.TO)[0].toString(), "m.agent.rafal@gmail.com");
         } catch (MessagingException e) {
             e.printStackTrace();
         }

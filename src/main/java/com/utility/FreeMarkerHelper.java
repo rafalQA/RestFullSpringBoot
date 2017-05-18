@@ -15,7 +15,7 @@ public class FreeMarkerHelper {
 
     public static String getMergedTemplateWithUserRoot(Object object, String template) {
 
-        Map<String, Object> root = getUserRoot(object);
+        Map<String, Object> root = getRoot(object);
 
         String mergedTemplate = null;
 
@@ -39,9 +39,15 @@ public class FreeMarkerHelper {
         return factoryBean;
     }
 
-    private static Map<String, Object> getUserRoot(Object object) {
+    private static Map<String, Object> getRoot(Object object) {
+
+        String className = object.getClass().getSimpleName();
+
+        String firstCharLowerCaseClassName = String.valueOf(className.charAt(0)).toLowerCase() +
+                className.substring(1);
+
         Map<String, Object> root = new HashMap<>();
-        root.put(object.getClass().getSimpleName().toLowerCase(), object);
+        root.put(firstCharLowerCaseClassName, object);
 
         return root;
     }
