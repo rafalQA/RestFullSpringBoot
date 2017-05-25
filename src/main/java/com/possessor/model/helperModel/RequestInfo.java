@@ -3,33 +3,14 @@ package com.possessor.model.helperModel;
 /**
  * Created by rpiotrowicz on 2017-05-24.
  */
-public class RequestLimit {
-    private int requestNumber = 0;
-    private long startTime;
-    private long endTime;
+public class RequestInfo {
+    private long requestTime;
 
-    public int getRequestNumber() {
-        return requestNumber;
+    public long getRequestTime() {
+        return requestTime;
     }
 
-    public void setRequestNumber(int requestNumber) {
-        this.requestNumber = requestNumber;
+    public void setRequestTime(long requestTime) {
+        this.requestTime = requestTime;
     }
-
-    public long getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(long startTime) {
-        this.startTime = startTime;
-    }
-
-    public long getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(long endTime) {
-        this.endTime = endTime;
-    }
-
 }

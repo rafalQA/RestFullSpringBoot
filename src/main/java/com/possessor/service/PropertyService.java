@@ -56,7 +56,7 @@ public class PropertyService {
         return MathHelper.getRounded(baseValue.multiply(new BigDecimal(rate)));
     }
 
-    public void deletePropertyOwnedByUser(Long id) {
+    public void deletePropertyUser(Long id) {
         Property property = propertyRepository.findAll().stream()
                 .filter(x -> x.getPropertyId().equals(id)).findFirst()
                 .orElseThrow(() -> new NoSuchElementException(String.format("No suchProperty with %d", id)));

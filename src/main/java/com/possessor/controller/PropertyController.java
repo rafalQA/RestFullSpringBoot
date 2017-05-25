@@ -49,7 +49,7 @@ public class PropertyController {
     @RequestMapping(method = RequestMethod.DELETE, value = "/properties/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePropertyOwnedByUser(@PathVariable Long id) {
-        propertyService.deletePropertyOwnedByUser(id);
+        propertyService.deletePropertyUser(id);
     }
 
     @ApiOperation(value = "get all properties for user", nickname = "get all properties for user",

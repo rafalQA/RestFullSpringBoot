@@ -1,84 +1,57 @@
 package com.possessor.interceptor;
 
-import com.opencsv.CSVReader;
-import com.opencsv.CSVWriter;
-import org.springframework.scheduling.annotation.Async;
+import com.possessor.model.helperModel.RequestInfo;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 
 /**
  * Created by rpiotrowicz on 2017-05-18.
  */
 
-@Async
-public class TrafficLoggerInterceptor implements HandlerInterceptor {
+public class RequestLimitInterceptor implements HandlerInterceptor {
 
+    private final int reqNumberLimit = 5;
+    private final long reqNumberDuration = 60;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String pathToFile = "src/resources/stats/TrafficStatistic.txt";
 
-        Path pathToStatistic = Paths.get(pathToFile);
+        String attributeName = "RequestNumber";
+        List requestsInfo;
 
-        //read
-        String reqClientHost = request.getRemoteHost();
+        ServletContext servletContext = request.getServletContext();
 
-        String csvClientHost = "";
-        int clientHostNumber = 0;
+        Object requestsInfoAttribute = servletContext.getAttribute(attributeName);
 
+        if (requestsInfoAttribute != null) {
+            requestsInfo = (List) requestsInfoAttribute;
 
-        //operation
+            int requestsSize = requestsInfo.size();
 
+            int startReqIndex = requestsSize - reqNumberLimit;
 
-        //write
-
-        try (BufferedReader reader = Files.newBufferedReader(pathToStatistic, Charset.forName("UTF-8"));
-             CSVReader csvReader = new CSVReader(reader, ',');
-             BufferedWriter writer = Files.newBufferedWriter(pathToStatistic, Charset.forName("UTF-8"));
-             CSVWriter csvWriter = new CSVWriter(writer, ',')) {
-
-            String[] line = {};
-            List<String> linesWords;
-            List<String[]> allContent = new LinkedList<>();
-
-            while ((line = csvReader.readNext()) != null) {
-
-                    linesWords =  Arrays.asList(line);
-
-                if (linesWords.contains(reqClientHost)) {
-
-                    clientHostNumber = Integer.parseInt(linesWords.get(1));
-                    clientHostNumber += 1;
-
-                    linesWords.set(1, String.valueOf(clientHostNumber));
-
-                    allContent.add(linesWords.toArray(new String[1]));
-
-                    break;
-                }else {
-
+            if (startReqIndex > 0) {
+                if (isReqLimitExceeded(requestsInfo, startReqIndex - 1)) {
+                    return false;
+                }
+            } else if (startReqIndex == 0) {
+                if (isReqLimitExceeded(requestsInfo, startReqIndex)) {
+                    return false;
                 }
             }
 
+            addNewReqInfo(requestsInfo);
 
-
-            csvWriter.writeAll(allContent);
-            writer.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } else {
+            addRequestsInfoWithFirstReqInfo(attributeName, servletContext);
         }
 
         return true;
@@ -92,5 +65,36 @@ public class TrafficLoggerInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
 
+    }
+
+    private boolean isReqLimitExceeded(List requestsInfo, int firstReqIndex) {
+        RequestInfo startReqInfo = (RequestInfo) requestsInfo.get(firstReqIndex);
+
+        return calcDurationStarRequestToNow(startReqInfo) <= reqNumberDuration;
+    }
+
+    private long calcDurationStarRequestToNow(RequestInfo firstReqInfo) {
+        return TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() -
+                firstReqInfo.getRequestTime());
+    }
+
+    private void addRequestsInfoWithFirstReqInfo(String attributeName, ServletContext servletContext) {
+        List requestsInfo;
+
+        requestsInfo = new ArrayList();
+        requestsInfo.add(getRequestInfoWithCurrentTime());
+
+        servletContext.setAttribute(attributeName, requestsInfo);
+    }
+
+    private void addNewReqInfo(List requestsInfo) {;
+        requestsInfo.add(getRequestInfoWithCurrentTime());
+    }
+
+    private RequestInfo getRequestInfoWithCurrentTime() {
+        RequestInfo requestInfo = new RequestInfo();
+        requestInfo.setRequestTime(System.currentTimeMillis());
+
+        return requestInfo;
     }
 }
