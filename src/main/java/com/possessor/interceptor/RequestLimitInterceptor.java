@@ -19,37 +19,28 @@ import java.util.concurrent.TimeUnit;
 public class RequestLimitInterceptor implements HandlerInterceptor {
 
     private final int reqNumberLimit = 5;
-    private final long reqNumberDuration = 60;
+    private final long reqNumberDuration = 20;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
         String attributeName = "RequestNumber";
         List requestsInfo;
 
         ServletContext servletContext = request.getServletContext();
-
         Object requestsInfoAttribute = servletContext.getAttribute(attributeName);
 
         if (requestsInfoAttribute != null) {
             requestsInfo = (List) requestsInfoAttribute;
+            int requestsInfoSize = requestsInfo.size();
+            int startReqIndex = requestsInfoSize - reqNumberLimit;
 
-            int requestsSize = requestsInfo.size();
-
-            int startReqIndex = requestsSize - reqNumberLimit;
-
-            if (startReqIndex > 0) {
-                if (isReqLimitExceeded(requestsInfo, startReqIndex - 1)) {
-                    return false;
-                }
-            } else if (startReqIndex == 0) {
+            if (startReqIndex == 0) {
                 if (isReqLimitExceeded(requestsInfo, startReqIndex)) {
                     return false;
                 }
+                clearUnnecessaryRequestsInfo(requestsInfo, requestsInfoSize, startReqIndex);
             }
-
             addNewReqInfo(requestsInfo);
-
         } else {
             addRequestsInfoWithFirstReqInfo(attributeName, servletContext);
         }
@@ -67,8 +58,8 @@ public class RequestLimitInterceptor implements HandlerInterceptor {
 
     }
 
-    private boolean isReqLimitExceeded(List requestsInfo, int firstReqIndex) {
-        RequestInfo startReqInfo = (RequestInfo) requestsInfo.get(firstReqIndex);
+    private boolean isReqLimitExceeded(List requestsInfo, int startReqIndex) {
+        RequestInfo startReqInfo = (RequestInfo) requestsInfo.get(startReqIndex);
 
         return calcDurationStarRequestToNow(startReqInfo) <= reqNumberDuration;
     }
@@ -87,7 +78,7 @@ public class RequestLimitInterceptor implements HandlerInterceptor {
         servletContext.setAttribute(attributeName, requestsInfo);
     }
 
-    private void addNewReqInfo(List requestsInfo) {;
+    private void addNewReqInfo(List requestsInfo) {
         requestsInfo.add(getRequestInfoWithCurrentTime());
     }
 
@@ -96,5 +87,12 @@ public class RequestLimitInterceptor implements HandlerInterceptor {
         requestInfo.setRequestTime(System.currentTimeMillis());
 
         return requestInfo;
+    }
+
+    private void clearUnnecessaryRequestsInfo(List requestsInfo, int requestsInfoSize, int startReqIndex) {
+        List clearRequestsInfo = requestsInfo.subList(startReqIndex,
+                requestsInfoSize);
+
+        requestsInfo.removeAll(clearRequestsInfo);
     }
 }
