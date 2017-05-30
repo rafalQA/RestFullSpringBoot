@@ -109,6 +109,7 @@ public class PropertyService {
     }
 
     private UriComponents buildAndGetUriComponents(Locale locale) {
+
         return UriComponentsBuilder.newInstance().
                 scheme("http").host("api.fixer.io").path("latest")
                 .queryParam("base", localeCurrency.getLocaleCurrencyCode(locale)).build();
