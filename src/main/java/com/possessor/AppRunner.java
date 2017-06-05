@@ -23,21 +23,19 @@ public class AppRunner extends AsyncConfigurerSupport {
     }
 
     @Bean
-    public DtoUserValidator userValidator() {
+    public DtoUserValidator getUserValidator() {
         return new DtoUserValidator();
     }
 
     @Bean
-    public PropertyValidator propertyValidator() {
+    public PropertyValidator getPropertyValidator() {
         return new PropertyValidator();
     }
 
-
     @Bean
-    public LocaleCurrency localeCurrency() {
+    public LocaleCurrency getLocaleCurrency() {
         return new LocaleCurrency();
     }
-
 
     @Override
     public Executor getAsyncExecutor() {

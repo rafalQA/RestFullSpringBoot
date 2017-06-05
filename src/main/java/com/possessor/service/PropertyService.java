@@ -37,7 +37,6 @@ public class PropertyService {
     private LocaleCurrency localeCurrency;
 
     public Long addPropertyForUser(Long userId, Property property) {
-
         User user = userRepository.findOne(userId);
 
         property.setUser(user);
@@ -46,9 +45,6 @@ public class PropertyService {
     }
 
     public BigDecimal getPropertyValueInForeignCurrency(Long id, String foreignCurrency, Locale locale) {
-
-       // propertyValidator.validForeignCurrency(foreignCurrency);
-
         Double rate = getForeignCurrencyRate(foreignCurrency, locale);
 
         BigDecimal baseValue = getPropertyValue(id);

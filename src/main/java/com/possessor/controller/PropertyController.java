@@ -1,5 +1,6 @@
 package com.possessor.controller;
 
+import com.possessor.model.ForeignCurrency;
 import com.possessor.model.Property;
 import com.possessor.service.PropertyService;
 import com.possessor.service.UserService;
@@ -30,7 +31,7 @@ public class PropertyController {
     private PropertyValidator propertyValidator;
 
     @InitBinder
-    protected void initBinder(WebDataBinder binder){
+    protected void initBinder(WebDataBinder binder) {
         binder.setValidator(propertyValidator);
     }
 
@@ -38,7 +39,7 @@ public class PropertyController {
     @RequestMapping(method = RequestMethod.POST, value = "/users/{id}/properties")
     @ResponseStatus(HttpStatus.CREATED)
     public Long addPropertyForUser(@PathVariable Long id, @Valid @RequestBody Property property) {
-        if(!userService.userExist(id)){
+        if (!userService.userExist(id)) {
             throw new IllegalArgumentException("User with id " + id + " doesn't exist");
         }
 
@@ -67,11 +68,15 @@ public class PropertyController {
         return propertyService.getAllProperties();
     }
 
+
     @ApiOperation(value = "get value by foreign currency", response = Property.class)
     @RequestMapping(method = RequestMethod.GET, value = "/properties/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public BigDecimal getValueByForeignCurrency(@PathVariable Long id,
-                                                @RequestParam("currency") String currency, Locale locale) {
+    public BigDecimal getValueByForeignCurrency(@PathVariable Long id, @RequestParam("currency") String currency,
+                                                Locale locale) {
+        if (!ForeignCurrency.isLegalCurrency(currency)) {
+            throw new IllegalArgumentException("Currency: " + currency + " is not legal");
+        }
+
         return propertyService.getPropertyValueInForeignCurrency(id, currency, locale);
     }
 }
