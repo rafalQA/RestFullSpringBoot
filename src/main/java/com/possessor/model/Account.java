@@ -15,8 +15,6 @@ import java.util.Set;
 public class Account implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ACCOUNT_ID")
     private Long accountId;
     @Column(name = "ACCOUNT_NAME", unique = true)
     private String username;
@@ -26,6 +24,9 @@ public class Account implements UserDetails {
     @Column(name = "ROLES")
     @Enumerated(EnumType.STRING)
     private Set<Roles> roles;
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    private User user;
     private boolean accountNonExpired;
     private boolean accountNonLocked;
     private boolean credentialsNonExpired;
@@ -97,5 +98,14 @@ public class Account implements UserDetails {
 
     public void setRoles(Set<Roles> roles) {
         this.roles = roles;
+    }
+
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

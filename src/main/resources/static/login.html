@@ -1,0 +1,27 @@
+
+<div class="jumbotron vertical-center">
+<div ng-controller="log" class="container">
+    <h1>
+        <small>Welcome to</small>
+        Possessor
+    </h1>
+
+    <form role="form">
+        <div class="form-group">
+            <div class="col-xs-3">
+                <label for="username">Username:</label> <input type="text"
+                                                               class="form-control" id="username" name="username"
+                                                               ng-model="credentials.username"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-3">
+                <label for="password">Password:</label> <input type="password"
+                                                               class="form-control" id="password" name="password"
+                                                               ng-model="credentials.password"/>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary" ng-click="authenticate()">Login</button>
+    </form>
+</div>
+</div>

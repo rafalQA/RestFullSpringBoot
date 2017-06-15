@@ -68,10 +68,12 @@ SecurityConfig {
                         .and()
                         .csrf().disable()
                         .authorizeRequests()
+                        .antMatchers("/index.html", "/home.html", "/login.html", "/resource/").permitAll()
                         .antMatchers(HttpMethod.PUT, "/users").permitAll()
                         .antMatchers("/users/{id}/properties", "properties/{id}").hasRole(Roles.USER.name())
                         .antMatchers(HttpMethod.GET, "/users").hasRole(Roles.ADMIN.name())
-                        .antMatchers("/users/{id}", "/properties").hasRole(Roles.ADMIN.name());
+                        .antMatchers("/users/{id}", "/properties").hasRole(Roles.ADMIN.name())
+                        .antMatchers("/user").authenticated();
             }
         };
     }

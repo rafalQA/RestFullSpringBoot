@@ -13,8 +13,6 @@ public enum ForeignCurrency {
 
     public static boolean isLegalCurrency(String currency){
         for(ForeignCurrency legalCurrency : ForeignCurrency.values()){
-            String c = legalCurrency.name();
-
             if(legalCurrency.name().equals(currency)){
                 return true;
             }

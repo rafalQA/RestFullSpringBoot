@@ -5,6 +5,8 @@ package com.possessor.model;
  */
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
@@ -21,9 +23,10 @@ public class User {
     @Column(unique = true)
     @Email
     private String email;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @Fetch(FetchMode.JOIN)
     private Set<Property> properties;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @JoinColumn(name = "ACCOUNT_ID")
     private Account account;
 
