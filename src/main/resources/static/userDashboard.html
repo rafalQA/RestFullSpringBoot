@@ -1,20 +1,22 @@
 <div ng-controller="userProp">
-    <div class="container">
+    <div style="margin-top: 45px; margin-left: 10px;" class="container">
 
         <div class="row">
-            <div class="col-md-2">
-                <div class="panel-group">
-                    <div class="panel panel-info">
+            <div class="col-xs-9 col-md-3 text-center">
+                <div class="panel-group" style="max-height: 10;">
+                    <div class="panel panel-primary">
                         <div class="panel-heading">
                             <h2 class="panel-title">Profile</h2>
                         </div>
                         <div class="panel-body">
-                            <p>Profile body</p>
+                            <i class="glyphicon glyphicon-user"></i><input style="border:0" ng-model="username"/></br>
+                            <i class="glyphicon glyphicon-lock"></i><input style="border:0" ng-model="role"/></br>
+                            <i class="glyphicon glyphicon-envelope"></i><input style="border:0" ng-model="email"/></br>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <h2 data-toggle="tooltip" data-placement="bottom"
                     title="This is form by wich you can add yours property">Add property</h2>
                 <form class="form-inline">
@@ -35,59 +37,66 @@
                 </form>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <h1>Foreign currency calculator</h1>
-        <form class="form-inline" data-ng-init="getCurrency()">
-            <div class="form-group">
-                <div class="col-xs-3">
-                    <input placeholder="enter property id" type="number" class="form-control" ng-model="propId">
-                </div>
+        <div class="row">
+            <div class="col-md-3">
             </div>
-            <div class="form-group">
-                <label for="currency">Currency:</label>
-                <select data-ng-init="select currency" class="form-control" id="currency" ng-model="selectedCurrency">
-                    <option ng-repeat="c in currency">{{c}}</option>
-                </select>
+            <div class="col-md-9">
+                <h1>Foreign currency calculator</h1>
+                <form class="form-inline" data-ng-init="getCurrency()">
+                    <div class="form-group">
+                        <div class="col-xs-3">
+                            <input placeholder="enter property id" type="number" class="form-control" ng-model="propId">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <select data-ng-init="select currency" class="form-control" id="currency"
+                                ng-model="selectedCurrency">
+                            <option ng-repeat="c in currency">{{c}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary" ng-click="convertPropertyValue()"><span
+                                class="glyphicon glyphicon-random"></span></button>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-3">
+                            <input class="form-control" placeholder="price in foreign currency"
+                                   ng-model="valueForeignCurrency">
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary" ng-click="convertPropertyValue()"><span
-                        class="glyphicon glyphicon-random"></span></button>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
             </div>
-            <div class="form-group">
-                <div class="col-xs-3">
-                    <input class="form-control" placeholder="price in foreign currency" ng-model="valueForeignCurrency">
-                </div>
+            <div class="col-xs-9 col-md-6">
+                <h2 data-toggle="tooltip" data-placement="bottom"
+                    title="This is the list of properties belong to you with value in abs">
+                    Yours properties</h2>
+                <table class="table table-striped" data-ng-init="retrieveProps()">
+                    <thead>
+                    <tr>
+                        <th class="col-md-1">Name</th>
+                        <th class="col-md-1">Value</th>
+                        <th class="col-md-1">ID</th>
+                        <th class="col-md-1">Delete</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="x in properties">
+                        <td class="col-md-1">{{ x.name}}</td>
+                        <td class="col-md-1">{{ x.value}}</td>
+                        <td class="col-md-1">{{ x.propertyId}}</td>
+                        <td class="col-md-1">
+                            <button class="btn btn-primary" ng-click="removeProperty($index)"><span
+                                    class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-        </form>
-    </div>
-    <div class="row">
-        <h2 data-toggle="tooltip" data-placement="bottom"
-            title="This is the list of properties belong to you with value in abs">
-            Yours properties</h2>
-        <table class="table table-striped" data-ng-init="retrieveProps()">
-            <thead>
-            <tr>
-                <th class="col-md-1">Name</th>
-                <th class="col-md-1">Value</th>
-                <th class="col-md-1">ID</th>
-                <th class="col-md-1">Delete</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="x in properties">
-                <td class="col-md-1">{{ x.name}}</td>
-                <td class="col-md-1">{{ x.value}}</td>
-                <td class="col-md-1">{{ x.propertyId}}</td>
-                <td class="col-md-1">
-                    <button class="btn btn-primary" ng-click="removeProperty($index)"><span
-                            class="glyphicon glyphicon-trash"></span>
-                    </button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        </div>
     </div>
 </div>
-
-

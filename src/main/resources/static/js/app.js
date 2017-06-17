@@ -40,6 +40,10 @@ function($rootScope, $http, $location, $scope) {
 
   var user = $rootScope.user;
 
+  $scope.username = user.name;
+  $scope.role = user.authorities[0];
+  $scope.email = user.principal.user.email;
+
   $scope.retrieveProps = function(){
      $http.get('/users/' +  user.principal.accountId + '/properties', {headers : $rootScope.authHeader})
       .then(function(response){
